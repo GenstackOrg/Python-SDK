@@ -3,7 +3,7 @@ from typing import Dict, Any, Optional, Union
 import asyncio
 
 class Genstack:
-    def __init__(self, api_key: str, base_url : Optional[str] = None):
+    def __init__(self, api_key: str, base_url : Optional[str] = "https://host.fly.dev"):
         if not api_key.startswith("gen-") or any(c.isspace() for c in api_key):
             raise ValueError("API key must start with 'gen-' and contain no spaces or line breaks.")
         self.api_key : str = api_key
