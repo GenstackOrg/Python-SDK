@@ -3,11 +3,14 @@ from typing import Dict, Any, Optional, Union
 import asyncio
 
 class Genstack:
-    def __init__(self, api_key: str, base_url : Optional[str] = "https://host.fly.dev"):
+    def __init__(self, api_key: str, base_url : Optional[str] = "https://host.fly.dev", admin_url : Optional[str] = None):
         if not api_key.startswith("gen-") or any(c.isspace() for c in api_key):
             raise ValueError("API key must start with 'gen-' and contain no spaces or line breaks.")
         self.api_key : str = api_key
-        self.base_url : str = base_url or "http://localhost:8000"
+        resolved_base_url = admin_url or base_url
+        if resolved_base_url is None:
+            raise ValueError("A base URL must be provided.")
+        self.base_url: str = resolved_base_url
     async def __call(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         async with httpx.AsyncClient(timeout=httpx.Timeout(30.0)) as client:
             try:
