@@ -5,6 +5,7 @@ setlocal enabledelayedexpansion
 for /f "tokens=2 delims==" %%A in ('findstr /i "version" pyproject.toml ^| findstr /v "#"') do (
     set raw_version=%%~A
     set raw_version=!raw_version:"=!
+    set raw_version=!raw_version: =!  :: <-- ADD THIS LINE to remove spaces
 )
 
 if not defined raw_version (
