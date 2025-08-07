@@ -29,6 +29,11 @@ class Genstack:
                 return {"error" : str(e)}
     async def __generate_async(self, payload : Dict[str, Any]) -> Dict[str, Any]:
         return await self.__call(payload=payload)
+    def __extract_first_text(self, result: dict) -> str:
+        for o in result.get("output", []):
+            if o.get("output", {}).get("type") == "TEXT":
+                return o["output"].get("text", "")
+        return ""
     def generate(self, input : Union[str, Dict[str, Any]], model : Optional[str] = "auto", track : Optional[str] = None) -> Dict[str, Any]:
         if not track :
             raise ValueError("Track is required.")
@@ -45,3 +50,7 @@ class Genstack:
             "track": track
         }
         return asyncio.run(self.__generate_async(payload=payload))
+    def get_output_text(self, input: Union[str, Dict[str, Any]], model: Optional[str] = "auto", track: Optional[str] = None) -> str:
+        result = self.generate(input=input, model=model, track=track)
+        first_text : str = self.__extract_first_text(result)
+        return first_text
